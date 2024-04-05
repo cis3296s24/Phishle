@@ -1,4 +1,5 @@
 import openai
+#importing the lib to speak to openai
 
 openai.api_key = 'your_openai_api_key_here'
 
@@ -7,8 +8,8 @@ def response(prompt: str): #prompt string argument which would be the input text
 
 
     try:
-       if not api_key:
-           return {"error": "Please provide a valid API key."}
+        if not api_key:
+            return {"error": "Please provide a valid API key."}
 
         # ChatCompletion to hold onto chat history
         reponse = openai.ChatCompletion.create(
