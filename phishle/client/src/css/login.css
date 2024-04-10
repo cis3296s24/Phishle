@@ -1,0 +1,84 @@
+body{
+    background-color: dimgray;
+    font-family: sans-serif;
+}
+
+#login{
+    width: 250px;
+    margin: 20vh auto 0 auto;
+    padding: 20px;
+    background-color: antiquewhite;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+#login h1{
+    color: black;
+    text-align: center;
+}
+
+#login button{
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+    color: white;
+    background-color: darkblue;
+    border: none;
+    border-radius: 5px;
+}
+
+#register{
+    width: 250px;
+    margin: 20vh auto 0 auto;
+    padding: 20px;
+    background-color: antiquewhite;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+#register h1{
+    color: black;
+    text-align: center;
+}
+
+#register button{
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+    color: white;
+    background-color: darkblue;
+    border: none;
+    border-radius: 5px;
+}
+
+.input-control{
+    display: flex;
+    flex-direction: column;
+}
+
+.input-control input{
+    border: 2px solid lightgray;
+    border-radius: 5px;
+    display: block;
+    font-size: 12px;
+    padding: 10px;
+    width: 90%;
+}
+
+.input-control input:focus{
+    outline: 0;
+}
+
+.input-control.success input{
+    border-color: forestgreen;
+}
+
+.input-control.error input{
+    border-color: red;
+}
+
+.input-control .error{
+    color: red;
+    font-size: 10px;
+    height: 15px;
+}
