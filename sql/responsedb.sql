@@ -1,0 +1,5 @@
+CREATE TABLE responses(
+    ResponseId int NOT NULL AUTO_INCREMENT
+    UserId int NOT NULL FOREIGN KEY
+    CreateDate Date NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
