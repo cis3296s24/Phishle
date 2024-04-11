@@ -5,44 +5,81 @@
     <title>Login</title>
     <link href="css/login.css" rel="stylesheet"/>
     <script defer src="js/login.js"></script>
+    <style>
+        body {
+            background-color: #e6f3ff; /* Light blue background color */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        .container {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Adjust height as needed */
+            flex-direction: column; /* Align items vertically */
+        }
+        .title {
+            text-align: center; /* Center the text horizontally */
+            margin-bottom: 20px; /* Add space below the title */
+            color: #333; /* Dark text color */
+        }
+        .form-container {
+            margin: 1in 20px 0; /* Move login box down by two inches */
+            border: 2px solid black; /* Add black border around the form container */
+            padding: 20px; /* Add padding to create space between border and content */
+        }
+        /* Remove border from login form container */
+        #login-form-container {
+            border: none;
+        }
+        #register {
+            margin-top: 20px; /* Add space between login and register forms */
+        }
+    </style>
 </head>
 <body>
-    <div class="container" style="float:left;padding-left: 400px;">
+<div class="container">
+    <div class="title">
+        <h1>Welcome to Phistle</h1>
+    </div>
+    <!-- Add an ID to the login form container -->
+    <div class="form-container" id="login-form-container">
         <form id="login" action="/">
             <h1>Login</h1>
             <div class="input-control">
-                <label for="username">Username</label>
+                <label for="loginUsername">Username</label>
                 <input type="text" id="loginUsername" name="loginUsername">
                 <div class="error"></div>
             </div>
             <div class="input-control">
-                <label for="password">Password</label>
+                <label for="loginPassword">Password</label>
                 <input type="password" id="loginPassword" name="loginPassword">
                 <div class="error"></div>
             </div>
             <button type="submit" id="loginbtn">Login</button>
-        </form> 
+        </form>
     </div>
-    <div class="container" style="float:left;padding-left: 150px;">
+    <div class="form-container">
         <form id="register" action="/">
             <h1>Register</h1>
             <div class="input-control">
-                <label for="username">Username</label>
+                <label for="regUsername">Username</label>
                 <input type="text" id="regUsername" name="regUsername">
                 <div class="error"></div>
             </div>
             <div class="input-control">
-                <label for="password">Password</label>
+                <label for="regPassword">Password</label>
                 <input type="password" id="regPassword" name="regPassword">
                 <div class="error"></div>
             </div>
             <div class="input-control">
-                <label for="password">Confirm Password</label>
+                <label for="regPassword2">Confirm Password</label>
                 <input type="password" id="regPassword2" name="regPassword2">
                 <div class="error"></div>
             </div>
             <button type="submit" id="registerbtn">Register</button>
-        </form> 
+        </form>
     </div>
+</div>
 </body>
 </html>
