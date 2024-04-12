@@ -3,78 +3,132 @@
 <head>
     <meta charset="utf-8" />
     <title>Login</title>
-    <link href="css/login.css" rel="stylesheet"/>
-    <script defer src="js/login.js"></script>
+    <link href="css/login.css" rel="stylesheet"/> <!-- Correct the path to your CSS file -->
+    <script defer src="js/login.js"></script> <!-- Correct the path to your JavaScript file -->
     <style>
         body {
-            background-color: #e6f3ff; /* Light blue background color */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7; /* Light blue background color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            height: 100vh; /* Adjust height as needed */
-            flex-direction: column; /* Align items vertically */
+            text-align: center;
         }
         .title {
-            text-align: center; /* Center the text horizontally */
-            margin-bottom: 20px; /* Add space below the title */
-            color: #333; /* Dark text color */
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 32px;
         }
         .form-container {
-            margin: 1in 20px 0; /* Move login box down by two inches */
-            border: 2px solid black; /* Add black border around the form container */
-            padding: 20px; /* Add padding to create space between border and content */
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 400px;
+            max-width: 90%;
+            transition: transform 0.3s ease;
+            display: inline-block;
         }
-        /* Remove border from login form container */
-        #login-form-container {
+        .form-container:hover {
+            transform: translateY(-5px);
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .input-control {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            font-size: 16px;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 12px; /* Increased padding for better usability */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease; /* Smooth transition for input focus */
+        }
+        input:focus {
+            outline: none;
+            border-color: #66afe9;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4caf50;
+            color: #fff;
             border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition for button hover */
+        }
+        button:hover {
+            background-color: #45a049;
         }
         #register {
-            margin-top: 20px; /* Add space between login and register forms */
+            margin-top: 20px;
+            background-color: #007bff; /* Blue color for register button */
+        }
+        #register:hover {
+            background-color: #0056b3; /* Darker blue color on hover */
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="title">
-        <h1>Welcome to Phistle</h1>
+        <h1>Welcome to Phisle</h1>
     </div>
-    <!-- Add an ID to the login form container -->
     <div class="form-container" id="login-form-container">
-        <form id="login" action="/">
-            <h1>Login</h1>
+        <form id="login" action="#">
+            <h2>Login</h2>
             <div class="input-control">
                 <label for="loginUsername">Username</label>
-                <input type="text" id="loginUsername" name="loginUsername">
+                <input type="text" id="loginUsername" name="loginUsername" required>
                 <div class="error"></div>
             </div>
             <div class="input-control">
                 <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" name="loginPassword">
+                <input type="password" id="loginPassword" name="loginPassword" required>
                 <div class="error"></div>
             </div>
             <button type="submit" id="loginbtn">Login</button>
         </form>
     </div>
-    <div class="form-container">
-        <form id="register" action="/">
-            <h1>Register</h1>
+    <div class="form-container" id="register-form-container">
+        <form id="register" action="#">
+            <h2>Register</h2>
             <div class="input-control">
                 <label for="regUsername">Username</label>
-                <input type="text" id="regUsername" name="regUsername">
+                <input type="text" id="regUsername" name="regUsername" required>
                 <div class="error"></div>
             </div>
             <div class="input-control">
                 <label for="regPassword">Password</label>
-                <input type="password" id="regPassword" name="regPassword">
+                <input type="password" id="regPassword" name="regPassword" required>
                 <div class="error"></div>
             </div>
             <div class="input-control">
                 <label for="regPassword2">Confirm Password</label>
-                <input type="password" id="regPassword2" name="regPassword2">
+                <input type="password" id="regPassword2" name="regPassword2" required>
                 <div class="error"></div>
             </div>
             <button type="submit" id="registerbtn">Register</button>
