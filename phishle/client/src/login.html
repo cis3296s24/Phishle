@@ -5,6 +5,8 @@
     <title>Login</title>
     <link href="css/login.css" rel="stylesheet"/> <!-- Correct the path to your CSS file -->
     <script defer src="js/login.js"></script> <!-- Correct the path to your JavaScript file -->
+    <link href="css/styles.css" rel="stylesheet" /> <!-- Core theme CSS (includes Bootstrap)-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,8 +18,9 @@
             align-items: center;
             height: 100vh;
         }
-        .container {
+        .container2 {
             text-align: center;
+            margin-top:40px;
         }
         .title {
             margin-bottom: 30px;
@@ -93,9 +96,27 @@
     </style>
 </head>
 <body>
-<div class="container">
+    <!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <div class="container px-4">
+        <a class="navbar-brand" href="index.html"><img style="transform:scale(.8)" src='assets/phishleBlue.png'/></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="learning.html">Learning</a></li>
+                <!-- Updated href attribute to point to learning.html -->
+                <li class="nav-item"><a class="nav-link" href="play.html">Play</a></li>
+                <li class="nav-item" style="margin-left:1em;margin-right:1em"><a class="nav-link">|</a></li>
+                <li class="nav-item active"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container2">
     <div class="title">
-        <h1>Welcome to Phisle</h1>
+        <h1>Welcome to Phishle</h1>
     </div>
     <div class="form-container" id="login-form-container">
         <form id="login" action="#">
@@ -135,5 +156,9 @@
         </form>
     </div>
 </div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
 </body>
 </html>
