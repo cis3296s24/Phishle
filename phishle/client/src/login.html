@@ -3,46 +3,137 @@
 <head>
     <meta charset="utf-8" />
     <title>Login</title>
-    <link href="css/login.css" rel="stylesheet"/>
-    <script defer src="js/login.js"></script>
+    <link href="css/login.css" rel="stylesheet"/> <!-- Correct the path to your CSS file -->
+    <script defer src="js/login.js"></script> <!-- Correct the path to your JavaScript file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7; /* Light blue background color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+        }
+        .title {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 32px;
+        }
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 400px;
+            max-width: 90%;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        .form-container:hover {
+            transform: translateY(-5px);
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .input-control {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            font-size: 16px;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 12px; /* Increased padding for better usability */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease; /* Smooth transition for input focus */
+        }
+        input:focus {
+            outline: none;
+            border-color: #66afe9;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition for button hover */
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #register {
+            margin-top: 20px;
+            background-color: #007bff; /* Blue color for register button */
+        }
+        #register:hover {
+            background-color: #0056b3; /* Darker blue color on hover */
+        }
+    </style>
 </head>
 <body>
-    <div class="container" style="float:left;padding-left: 400px;">
-        <form id="login" action="/">
-            <h1>Login</h1>
+<div class="container">
+    <div class="title">
+        <h1>Welcome to Phisle</h1>
+    </div>
+    <div class="form-container" id="login-form-container">
+        <form id="login" action="#">
+            <h2>Login</h2>
             <div class="input-control">
-                <label for="username">Username</label>
-                <input type="text" id="loginUsername" name="loginUsername">
+                <label for="loginUsername">Username</label>
+                <input type="text" id="loginUsername" name="loginUsername" required>
                 <div class="error"></div>
             </div>
             <div class="input-control">
-                <label for="password">Password</label>
-                <input type="password" id="loginPassword" name="loginPassword">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="loginPassword" required>
                 <div class="error"></div>
             </div>
             <button type="submit" id="loginbtn">Login</button>
-        </form> 
+        </form>
     </div>
-    <div class="container" style="float:left;padding-left: 150px;">
-        <form id="register" action="/">
-            <h1>Register</h1>
+    <div class="form-container" id="register-form-container">
+        <form id="register" action="#">
+            <h2>Register</h2>
             <div class="input-control">
-                <label for="username">Username</label>
-                <input type="text" id="regUsername" name="regUsername">
+                <label for="regUsername">Username</label>
+                <input type="text" id="regUsername" name="regUsername" required>
                 <div class="error"></div>
             </div>
             <div class="input-control">
-                <label for="password">Password</label>
-                <input type="password" id="regPassword" name="regPassword">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" name="regPassword" required>
                 <div class="error"></div>
             </div>
             <div class="input-control">
-                <label for="password">Confirm Password</label>
-                <input type="password" id="regPassword2" name="regPassword2">
+                <label for="regPassword2">Confirm Password</label>
+                <input type="password" id="regPassword2" name="regPassword2" required>
                 <div class="error"></div>
             </div>
             <button type="submit" id="registerbtn">Register</button>
-        </form> 
+        </form>
     </div>
+</div>
 </body>
 </html>

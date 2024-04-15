@@ -64,6 +64,8 @@ function validateRegister(){
     pass2Valid = false;
     if(username === ""){
         setError(regUsername, "Username cannot be empty");
+    }else if(loginInformation.has(username)){
+        setError(regUsername, "Username is already taken");
     }else{
         setSuccess(regUsername);
         userValid = true;
