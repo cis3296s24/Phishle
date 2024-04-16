@@ -56,6 +56,25 @@ function createEmailHtml(email) {
     emailBody.innerHTML = `<p>${email.body}</p>`;
     emailContainer.appendChild(emailBody);
 
+    const emailClosing = document.createElement('div');
+    emailClosing.className = 'email-closing';
+    emailClosing.innerHTML = `<p>${email.closing}</p>`;
+    emailContainer.appendChild(emailClosing);
+
+    const emailAttachment = document.createElement('div');
+    emailAttachment.className = 'email-attachment';
+    emailAttachment.innerHTML = email.attachment && email.attachment !== 'none' ?
+        `<p><strong>Attachment:</strong> ${email.attachment}</p>` :
+        '<p><strong>Attachment:</strong> None</p>';
+    emailContainer.appendChild(emailAttachment);
+
+    const emailLink = document.createElement('div');
+    emailLink.className = 'email-link';
+    emailLink.innerHTML = email.link && email.link !== 'none' ?
+        `<p><strong>Link:</strong> <a href="${email.link}" target="_blank">Click here</a></p>` :
+        '<p><strong>Link:</strong> None</p>';
+    emailContainer.appendChild(emailLink);
+
     const verifyButton = document.createElement('button');
     verifyButton.innerText = 'Verify Phishing';
     verifyButton.onclick = function() { verifyPhishing(email.email_id); };
@@ -74,7 +93,7 @@ function verifyPhishing(emailId) {
             buttons.forEach(button => {
                 button.disabled = true;
             });
-            
+
             if (result.is_phishing) {
                 feedbackElement.innerText = 'Correct! This email is a phishing attempt.';
                 feedbackElement.style.color = 'green';
