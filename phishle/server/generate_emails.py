@@ -1,44 +1,54 @@
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text
+from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
 from api.api import get_response
 import random
 from random import randint
 import re
+from apscheduler.schedulers.background import BlockingScheduler
 
-app = Flask(__name__)
 
-# app.config for database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://phishle:phishlepasswd@localhost/phishle_database'
-db = SQLAlchemy(app)
+Base = declarative_base()
+
+# emails database model
+class Email(Base):
+    __tablename__ = 'Emails'
+    set_id = Column(Integer, primary_key=True)
+    email_id = Column(Integer, primary_key=True)
+    from_email = Column(String(120), nullable=False)
+    to_email = Column(String(120), nullable=False)
+    subject = Column(String(120), nullable=False)
+    body = Column(Text, nullable=False)
+    closing = Column(String(120), nullable=False)
+    attachment = Column(String(120), nullable=False)
+    link = Column(String(120), nullable=False)
+    is_phishing = Column(Boolean, nullable=False, default=False)
+
+
+# Database connection setup
+DATABASE_URI = 'mysql+pymysql://phishle:phishlepasswd@localhost/phishle_database'
+engine = create_engine(DATABASE_URI)
+db_session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
 
 # List of distinguishing element of a phishing email
 elements_list = ["poor grammar and spelling mistakes", "unsecured and suspicious link", "urgency and threatening language", "unexpected or suspicious attachments"]
 
-# emails database model
-class Email(db.Model):
-    set_id = db.Column(db.Integer, primary_key=True)
-    email_id = db.Column(db.Integer, primary_key=True)
-    from_email = db.Column(db.String(120), nullable=False)
-    to_email = db.Column(db.String(120), nullable=False)
-    subject = db.Column(db.String(120), nullable=False)
-    body = db.Column(db.Text, nullable=False)
-    closing = db.Column(db.String(120), nullable=False)
-    attachment = db.Column(db.String(120), nullable=False)
-    link = db.Column(db.String(120), nullable = False)
-    is_phishing = db.Column(db.Boolean, nullable = False, default = False)
-
 # Create the Emails table if it doesn't exist
-with app.app_context():
-    db.create_all()
+def initialize_database():
+    Base.metadata.create_all(engine)
+    latest_set_id = db_session.query(Email.set_id).order_by(Email.set_id.desc()).first()
+    if latest_set_id:
+        return latest_set_id[0]
+    else:
+        return 0
 
-@app.route('/api/emails', methods=['GET'])
-def get_emails():
+def generate_emails():
 
-    # Select a random element from the list
+    latest_set_id = initialize_database()
+    set_id = latest_set_id + 1
+    
+    # Select a random element and number
     random_element = random.choice(elements_list)
     random_number = randint(1, 3)
-
-    print(random_element)
 
     prompt = f"""
     I want you to generate a set of 3 emails. One of the emails in the set is a subtle phishing attempt by an adversary. The other two emails in the set are legitimate emails that could be mistaken as a phishing attempt. 
@@ -94,10 +104,7 @@ def get_emails():
     scenario, parsed_emails = parse_emails(response)
 
     try:
-        latest_set_id = db.session.query(db.func.max(Email.set_id)).scalar() or 0
-        set_id = latest_set_id + 1
         email_index = 1
-
         for email_data in parsed_emails:
             new_email = Email(
                 set_id=set_id,
@@ -112,14 +119,14 @@ def get_emails():
                 is_phishing=(email_index == random_number) 
             )
 
-            db.session.add(new_email)
+            db_session.add(new_email)
             email_index += 1
 
-        db.session.commit()
-        return jsonify({"message": "Emails fetched and stored success"})
-    
-    except Exception as e:
-        return jsonify({"error": str(e)})
+        db_session.commit()
+        
+    finally:
+        db_session.close()
+        print(random_element, random_number)
 
 def parse_emails(email_content):
     emails = []
@@ -157,5 +164,8 @@ def parse_emails(email_content):
 
     return scenario, emails
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+if __name__ == "__main__":
+    scheduler = BlockingScheduler()
+    scheduler.add_job(generate_emails, 'cron', hour=0, minute=0)
+    scheduler.start()
