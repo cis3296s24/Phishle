@@ -1,9 +1,0 @@
-CREATE TABLE Users (
-	UserId int NOT NULL AUTO_INCREMENT,
-	Username varchar(255) NOT NULL,
-	Email varchar(255) NOT NULL,
-	PasswordSalt varchar(255) NOT NULL,
-	Password varchar(255) NOT NULL,
-	CreatedDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	ModifiedDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
