@@ -11,3 +11,10 @@
     margin-right:auto;
     background-color:rgba(154, 206, 255, 0.5);
 }
+
+.playerCard{
+    width: 100%;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:lightgray;
+}
