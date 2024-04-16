@@ -1,13 +1,13 @@
 import openai
 
-openai.api_key = 'your_openai_api_key_here'
+openai.api_key = ''
 
 
 def get_response(prompt: str):
     try:
         # ChatCompletion to hold onto chat history
         response = openai.ChatCompletion.create(
-            model = "gpt-4t",
+            model = "gpt-4-turbo",
             messages = [
                 {   "role": "system", 
                     "content": "You are a cybersecurity specialist, with a focus on phishing emails."
@@ -16,10 +16,12 @@ def get_response(prompt: str):
                     "role": "user", 
                     "content": prompt
                 }
-            ]
+            ],
+            max_tokens=550,
+            temperature = 1
         )
 
-        # extract completed test
+        # extract completed text
         completion_text = response["choices"][0]["message"]["content"]
         return completion_text
     
