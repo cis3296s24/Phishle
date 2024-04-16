@@ -34,5 +34,10 @@ def play(set_id):
                    'is_phishing': email.is_phishing} for email in emails]
     return jsonify(email_data)
 
+@app.route('/latest_set_id')
+def latest_set_id():
+    latest_set_id = db.session.query(db.func.max(Email.set_id)).scalar() or 0
+    return jsonify({'latest_set_id': latest_set_id})
+
 if __name__ == '__main__':
     app.run(debug=True)
