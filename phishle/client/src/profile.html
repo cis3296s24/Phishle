@@ -9,6 +9,10 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
+    <link href="css/profile.css" rel="stylesheet"/>
+    <!--Datatables CSS-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
+    
 </head>
 <body id="page-top">
     <!-- Navigation-->
@@ -29,8 +33,68 @@
             </div>
         </div>
     </nav>
-
-    
+    <div class="profileSection">
+        <div class="card streakCard">
+            <div class="card-body">
+            <h2 class="card-title">Your Streak Is: <h1 style="font-weight:bold;font-size:50px">0 days</h1></h2><br/>
+            <h5 class="card-subtitle mb-2 text-body-secondary bold">Username: Not signed in</h5>
+            <p class="card-text">You are not currently signed in. To track your streak and see yourself on the leaderboard, make an account or sign in below!</p>
+            <button id='profileDetails' class="btn btn-secondary">Edit Profile</button>
+            <button id='signUp' class="btn btn-primary">Sign Up/Login</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="leaderboard" class="table caption-top">
+                <h2>All Time Leaderboard</h2>
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Place</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Date Joined</th>
+                    <th scope="col">Streak</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>jDoe</td>
+                    <td>04/04/24</td>
+                    <td>4 Days</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>jSmith</td>
+                    <td>4/12/24</td>
+                    <td>3 Days</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>eMusk</td>
+                    <td>4/02/24</td>
+                    <td>2 Days</td>
+                </tr>
+                <tr>
+                    <th scope="row">4</th>
+                    <td>tHoward</td>
+                    <td>04/14/24</td>
+                    <td>1 Day</td>
+                </tr>
+                <tr>
+                    <th scope="row">5</th>
+                    <td>gLee</td>
+                    <td>4/10/24</td>
+                    <td>1 Day</td>
+                </tr>
+                <tr>
+                    <th scope="row">6</th>
+                    <td>nPeart</td>
+                    <td>4/05/24</td>
+                    <td>1 Day</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <!-- Footer-->
     <footer class="py-5 bg-dark">
@@ -40,5 +104,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
+    <!--Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!--Datatables Js-->
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <!--Custom Js for page-->
+    <script src="js/profile.js"></script>
 </body>
 </html>
