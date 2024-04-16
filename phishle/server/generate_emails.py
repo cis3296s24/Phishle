@@ -166,6 +166,7 @@ def parse_emails(email_content):
 
 
 if __name__ == "__main__":
-    scheduler = BlockingScheduler()
-    scheduler.add_job(generate_emails, 'cron', hour=0, minute=0)
-    scheduler.start()
+    generate_emails()
+    # scheduler = BlockingScheduler()
+    # scheduler.add_job(generate_emails, 'cron', hour=0, minute=0)
+    # scheduler.start()
