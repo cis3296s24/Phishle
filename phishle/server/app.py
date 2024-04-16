@@ -1,8 +1,12 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
+
 # app.config for database
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://phishle:phishlepasswd@localhost/phishle_database'
 db = SQLAlchemy(app)
 
@@ -20,24 +24,35 @@ class Email(db.Model):
     is_phishing = db.Column(db.Boolean, nullable = False, default = False)
 
 @app.route('/play/<int:set_id>')
+@cross_origin()
 def play(set_id):
     emails = Email.query.filter_by(set_id=set_id).all()
-    email_data = [{'set_id': email.set_id,
-                   'email_id': email.email_id,
-                   'from_email': email.from_email,
-                   'to_email': email.to_email,
-                   'subject': email.subject,
-                   'body': email.body,
-                   'closing': email.closing,
-                   'attachment': email.attachment,
-                   'link': email.link,
-                   'is_phishing': email.is_phishing} for email in emails]
+    email_data = [{
+                    'set_id': email.set_id,
+                    'email_id': email.email_id,
+                    'from_email': email.from_email,
+                    'to_email': email.to_email,
+                    'subject': email.subject,
+                    'body': email.body,
+                    'closing': email.closing,
+                    'attachment': email.attachment,
+                    'link': email.link,
+                    'is_phishing': email.is_phishing
+                } for email in emails]
     return jsonify(email_data)
 
 @app.route('/latest_set_id')
+@cross_origin()
 def latest_set_id():
     latest_set_id = db.session.query(db.func.max(Email.set_id)).scalar() or 0
-    return jsonify({'latest_set_id': latest_set_id})
+    return jsonify(latest_set_id=latest_set_id)
+
+@app.route('/verify_phishing/<int:email_id>')
+def verify_phishing(email_id):
+    email = db.session.query(Email).filter(Email.email_id == email_id).first()
+
+    if email:
+        return jsonify(is_phishing=email.is_phishing)
 
 if __name__ == '__main__':
     app.run(debug=True)
