@@ -22,6 +22,7 @@ class Email(Base):
     attachment = Column(String(120), nullable=False)
     link = Column(String(120), nullable=False)
     is_phishing = Column(Boolean, nullable=False, default=False)
+    feedback = Column(String(240), nullable = False)
 
 
 # Database connection setup
@@ -74,33 +75,39 @@ def generate_emails():
     To: [Insert recipient's email address]
     Subject: [Insert subject of the email]
     Body: [Insert a detailed message, making sure it contains multiple sentences.]
-    Closing: [Insert a single sentence closing line]
+    Closing: [Insert a regards message, but on a single line]
     Attachment: [If there is no attachment, write 'none']
     Link: [If there is no link, write 'none']
+    Feedback: [Insert Feedback on why this email is/is not the phishing attempt]
 
     Email 2:   
     From: [Insert sender's email address]
     To: [Insert recipient's email address]
     Subject: [Insert subject of the email]
     Body: [Insert a detailed message, making sure it contains multiple sentences.]
-    Closing: [Insert a single sentence closing line]
+    Closing: [Insert a regards message, but on a single line]
     Attachment: [If there is no attachment, write 'none']
     Link: [If there is no link, write 'none']
+    Feedback: [Insert Feedback on why this email is/is not the phishing attempt]
 
     Email 3:
     From: [Insert sender's email address]
     To: [Insert recipient's email address]
     Subject: [Insert subject of the email]
     Body: [Insert a detailed message, making sure it contains multiple sentences.]
-    Closing: [Insert a single sentence closing line]
+    Closing: [Insert a regards message, but on a single line]
     Attachment: [If there is no attachment, write 'none']
     Link: [If there is no link, write 'none']
+    Feedback: [Insert Feedback on why this email is/is not the phishing attempt]
 
-    Please ensure each field starts on a new line exactly as shown, and follows the punctuation and format exactly as specified. The content should be clear, professional, and realistic for a business setting.
+    Please ensure each field starts on a new line exactly as shown, and follows the punctuation and format exactly as specified. The content should be clear, professional, and realistic. 
+
+
     """
     
     # Getting the response from GPT-4t
     response = get_response(prompt) 
+    print(response)
     scenario, parsed_emails = parse_emails(response)
 
     try:
@@ -116,7 +123,8 @@ def generate_emails():
                 closing=email_data['closing'],
                 attachment=email_data['attachment'],
                 link=email_data['link'],
-                is_phishing=(email_index == random_number) 
+                is_phishing=(email_index == random_number),
+                feedback=email_data['feedback']
             )
 
             db_session.add(new_email)
@@ -132,14 +140,15 @@ def parse_emails(email_content):
     emails = []
     
     email_pattern = re.compile(
-        r"From:\s*(.+?)\n" +  
-        r"To:\s*(.+?)\n" +  
-        r"Subject:\s*(.+?)\n" +  
-        r"Body:\s*(.+?)\n" +  
-        r"Closing:\s*(.+?)\n" +  
+        r"From:\s*(.+?)\n" +
+        r"To:\s*(.+?)\n" +
+        r"Subject:\s*(.+?)\n" +
+        r"Body:\s*(.+?)\n" +
+        r"Closing:\s*(.+?)\n" +
         r"Attachment:\s*(.+?)\n" +
-        r"Link: \s*(.+?)(?:\n|$)",
-        re.DOTALL  
+        r"Link:\s*(.+?)\n" +
+        r"Feedback:\s*(.+?)(?:\n|$)",  
+        re.DOTALL
     )
 
     # Splitting the scenario from the email content
@@ -157,7 +166,8 @@ def parse_emails(email_content):
                 "body": match.group(4).strip(),
                 "closing": match.group(5).strip(),
                 "attachment": match.group(6).strip(),
-                "link": match.group(7).strip()
+                "link": match.group(7).strip(),
+                "feedback": match.group(8).strip()
             })
         else:
             print("Failed to parse some emails correctly:", email_text)
