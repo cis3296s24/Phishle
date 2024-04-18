@@ -27,9 +27,13 @@ Thumbs.db
 *.sublime-workspace
 *.komodoproject
 
-# ignore log files and databases
+# ignore log files 
 *.log
-*.sqlite
+
+# ignore byte-compiled
+*.py[cod]
+*$py.class
+__pycache__/
 
 # ignore compiled files
 *.com
