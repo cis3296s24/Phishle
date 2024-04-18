@@ -1,15 +1,15 @@
 #emailList {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around; /* This will space out your emails evenly */
-    padding-top:150px; /* Adjust the padding at the top as needed */
+    justify-content: space-around;
+    padding-top:150px; 
   }
   
   .email-container {
-    width: 45%; /* Adjust the width to fit two emails side by side */
+    width: 45%; 
     border: 1px solid #ffffff;
     font-family: 'Arial', sans-serif;
-    margin: 10px; /* This adds some space around each email container */
+    margin: 10px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
   }
   
@@ -33,6 +33,15 @@
   }
   
   .email-body p {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
   }
   
+  .email-closing, .email-attachment, .email-link {
+    padding-left: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .email-closing, .email-attachment, .email-link {
+      border: 1px solid #ffffff; 
+  }
