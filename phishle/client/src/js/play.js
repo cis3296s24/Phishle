@@ -77,14 +77,14 @@ function createEmailHtml(email) {
 
     const verifyButton = document.createElement('button');
     verifyButton.innerText = 'Verify Phishing';
-    verifyButton.onclick = function() { verifyPhishing(email.email_id); };
+    verifyButton.onclick = function() { verifyPhishing(email.set_id, email.email_id); };
     emailContainer.appendChild(verifyButton);
 
     return emailContainer;
 }
 
-function verifyPhishing(emailId) {
-    fetch(`http://localhost:5000/verify_phishing/${emailId}`)
+function verifyPhishing(setId, emailId) {
+    fetch(`http://localhost:5000/verify_phishing/${setId}/${emailId}`)
         .then(response => response.json())
         .then(result => {
             const feedbackElement = document.getElementById('feedback');
@@ -106,7 +106,6 @@ function verifyPhishing(emailId) {
             console.error('Error during phishing verification:', error);
         });
 }
-
 async function initializePage() {
     const latestSetId = await fetchLatestSetId();
 
