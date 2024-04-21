@@ -9,7 +9,7 @@ from apscheduler.schedulers.background import BlockingScheduler
 
 Base = declarative_base()
 
-# emails database model
+# Emails database model
 class Email(Base):
     __tablename__ = 'Emails'
     set_id = Column(Integer, primary_key=True)
@@ -22,6 +22,12 @@ class Email(Base):
     attachment = Column(String(120), nullable=False)
     link = Column(String(120), nullable=False)
     is_phishing = Column(Boolean, nullable=False, default=False)
+
+# Scenario database model
+class Scenario(Base):
+    __tablename__ = 'Scenarios'
+    set_id = Column(Integer, primary_key=True)
+    scenario = Column(String(120), unique=True, nullable=False)
 
 
 # Database connection setup
@@ -40,68 +46,82 @@ def initialize_database():
         return latest_set_id[0]
     else:
         return 0
+    
+def scenario_exists(scenario):
+    return db_session.query(Scenario).filter_by(scenario=scenario).first()
 
 def generate_emails():
 
     latest_set_id = initialize_database()
     set_id = latest_set_id + 1
-    
-    # Select a random element and number
-    random_element = random.choice(elements_list)
-    random_number = randint(1, 3)
+    new_scenario = False
 
-    prompt = f"""
-    I want you to generate a set of 3 emails. One of the emails in the set is a subtle phishing attempt by an adversary. The other two emails in the set are legitimate emails that could be mistaken as a phishing attempt. 
+    while not new_scenario:
+        # Select a random element and number
+        random_element = random.choice(elements_list)
+        random_number = randint(1, 3)
 
-    Each email should have the following sections:
-    From: <email address>
-    To: <email address>
-    Subject: <subject line>
-    Body: At least 3 sentences
-    Closing: <closing statement>
+        prompt = f"""
+        I want you to generate a set of 3 emails. One of the emails in the set is a subtle phishing attempt by an adversary. The other two emails in the set are legitimate emails that could be mistaken as a phishing attempt. 
 
-    All emails in the set are related to a certain scenario which is clearly identified at the beginning of the set. 
+        Each email should have the following sections:
+        From: <email address>
+        To: <email address>
+        Subject: <subject line>
+        Body: At least 3 sentences
+        Closing: <closing statement>
 
-    The phishing email contains ONLY the following distinguishing element: {random_element}. Every other part of the phishing email must feel legitimate. If the distinguishing element is an unsecured and suspicious link, the other legitimate emails in the set contain a legitimate link. If the distinguishing element is an unexpected and suspicious attachment, the other legitimate emails in the set contains an attachment in the following format 'name.filetype'.
+        All emails in the set are related to a certain scenario which is clearly identified at the beginning of the set. 
 
-    I want the phishing email to be email number {random_number}. Do not include any extra explanations."
+        The phishing email contains ONLY the following distinguishing element: {random_element}. Every other part of the phishing email must feel legitimate. If the distinguishing element is an unsecured and suspicious link, the other legitimate emails in the set contain a legitimate link. If the distinguishing element is an unexpected and suspicious attachment, the other legitimate emails in the set contains an attachment in the following format 'name.filetype'.
 
-    The scenario and the emails should follow this exact structure:
-    Scenario: [Describe in 3 words]
+        I want the phishing email to be email number {random_number}. Do not include any extra explanations."
 
-    Email 1:
-    From: [Insert sender's email address]
-    To: [Insert recipient's email address]
-    Subject: [Insert subject of the email]
-    Body: [Insert a detailed message, making sure it contains multiple sentences.]
-    Closing: [Insert a single sentence closing line]
-    Attachment: [If there is no attachment, write 'none']
-    Link: [If there is no link, write 'none']
+        The scenario and the emails should follow this exact structure:
+        Scenario: [Describe in 3 words]
 
-    Email 2:   
-    From: [Insert sender's email address]
-    To: [Insert recipient's email address]
-    Subject: [Insert subject of the email]
-    Body: [Insert a detailed message, making sure it contains multiple sentences.]
-    Closing: [Insert a single sentence closing line]
-    Attachment: [If there is no attachment, write 'none']
-    Link: [If there is no link, write 'none']
+        Email 1:
+        From: [Insert sender's email address]
+        To: [Insert recipient's email address]
+        Subject: [Insert subject of the email]
+        Body: [Insert a detailed message, making sure it contains multiple sentences.]
+        Closing: [Insert a single sentence closing line]
+        Attachment: [If there is no attachment, write 'none']
+        Link: [If there is no link, write 'none']
 
-    Email 3:
-    From: [Insert sender's email address]
-    To: [Insert recipient's email address]
-    Subject: [Insert subject of the email]
-    Body: [Insert a detailed message, making sure it contains multiple sentences.]
-    Closing: [Insert a single sentence closing line]
-    Attachment: [If there is no attachment, write 'none']
-    Link: [If there is no link, write 'none']
+        Email 2:   
+        From: [Insert sender's email address]
+        To: [Insert recipient's email address]
+        Subject: [Insert subject of the email]
+        Body: [Insert a detailed message, making sure it contains multiple sentences.]
+        Closing: [Insert a single sentence closing line]
+        Attachment: [If there is no attachment, write 'none']
+        Link: [If there is no link, write 'none']
 
-    Please ensure each field starts on a new line exactly as shown, and follows the punctuation and format exactly as specified. The content should be clear, professional, and realistic for a business setting.
-    """
-    
-    # Getting the response from GPT-4t
-    response = get_response(prompt) 
-    scenario, parsed_emails = parse_emails(response)
+        Email 3:
+        From: [Insert sender's email address]
+        To: [Insert recipient's email address]
+        Subject: [Insert subject of the email]
+        Body: [Insert a detailed message, making sure it contains multiple sentences.]
+        Closing: [Insert a single sentence closing line]
+        Attachment: [If there is no attachment, write 'none']
+        Link: [If there is no link, write 'none']
+
+        Please ensure each field starts on a new line exactly as shown, and follows the punctuation and format exactly as specified. The content should be clear, professional, and realistic for a business setting.
+        """
+        
+        # Getting the response from GPT-4t
+        response = get_response(prompt) 
+        scenario, parsed_emails = parse_emails(response)
+
+        if not scenario_exists(scenario):
+            new_scenario = True
+            new_scenario = Scenario(scenario=scenario)
+            db_session.add(new_scenario)
+            db_session.commit()
+        else:
+            print("Repeat Scenario. Regenerating...")
+            response = get_response(prompt)
 
     try:
         email_index = 1
@@ -166,6 +186,7 @@ def parse_emails(email_content):
 
 
 if __name__ == "__main__":
-    scheduler = BlockingScheduler()
-    scheduler.add_job(generate_emails, 'cron', hour=0, minute=0)
-    scheduler.start()
+    generate_emails()
+    # scheduler = BlockingScheduler()
+    # scheduler.add_job(generate_emails, 'cron', hour=0, minute=0)
+    # scheduler.start()

@@ -105,9 +105,10 @@ def latest_set_id():
     latest_set_id = db.session.query(db.func.max(Email.set_id)).scalar() or 0
     return jsonify(latest_set_id=latest_set_id)
 
-@app.route('/verify_phishing/<int:email_id>')
-def verify_phishing(email_id):
-    email = db.session.query(Email).filter(Email.email_id == email_id).first()
+@app.route('/verify_phishing/<int:set_id>/<int:email_id>')
+def verify_phishing(set_id, email_id):
+    email = db.session.query(Email).filter_by(set_id=set_id, email_id=email_id).first()
+
 
     if email:
         return jsonify(is_phishing=email.is_phishing)
