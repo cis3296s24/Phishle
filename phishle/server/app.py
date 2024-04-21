@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
+
 
 app = Flask(__name__)
 CORS(app)
@@ -23,6 +24,63 @@ class Email(db.Model):
     link = db.Column(db.String(120), nullable = False)
     is_phishing = db.Column(db.Boolean, nullable = False, default = False)
     feedback = db.Column(db.String(240), nullable = False)
+
+class User(db.Model):
+    __tablename__ = 'Users'
+    user_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(120), nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    currentstreak = db.Column(db.Integer, nullable=False)
+    longeststreak = db.Column(db.Integer, nullable=False)
+    group_id = db.Column(db.Integer, nullable=False)
+
+class Group(db.Model):
+    __tablename__ = 'Groups'
+    group_id = db.Column(db.Integer, primary_key=True)
+    group_name = db.Column(db.String(120), nullable=False)
+    group_code = db.Column(db.String(120), nullable=False)
+    group_leader = db.Column(db.String(120), nullable=False)
+    group_members = group_members = db.Column(db.String(500), nullable=False)
+    group_leaderboard_id = db.Column(db.Integer, nullable=False)
+
+class Leaderboard(db.Model):
+    __tablename__ = 'Leaderboards'
+    leaderboard_id = db.Column(db.Integer, primary_key=True) 
+    userranks = db.Column(db.String(500), nullable=False) #user_id, currentstreak, longeststreak
+
+
+@app.route('/userlogin', methods=['POST'])
+@cross_origin()
+def userlogin():
+    data = request.json
+    Username = data.get('Username')
+    Password = data.get('Password')
+    user = db.session.query(User).filter(User.username == Username).first()  # finds user with matching username
+    if user and user.password == Password:  # checks if password is correct
+        return jsonify({"success": True}), 200
+    else:
+        return jsonify({"success": False}), 
+
+
+@app.route('/userregister', methods=['POST'])
+@cross_origin()
+def userregister():
+    data = request.json
+    Username = data.get('Username')
+    Password = data.get('Password')
+    Password2 = data.get('Password2')
+
+    user = db.session.query(User).filter(User.username == Username).first()  # finds user with matching username
+    if user:
+        return jsonify({"success": False, "message": "Username already exists"}), 409  # HTTP 409 Conflict
+    elif Password != Password2:  # checks if passwords match
+        return jsonify({"success": False, "message": "Passwords do not match"}), 400  # HTTP 400 Bad Request
+    else:
+        newuser = User(username=Username, password=Password, currentstreak=0, longeststreak=0, group_id=0)
+        db.session.add(newuser)
+        db.session.commit()
+        return jsonify({"success": True, "message": "User successfully registered"}), 201
+
 
 @app.route('/play/<int:set_id>')
 @cross_origin()
@@ -52,6 +110,8 @@ def latest_set_id():
 def verify_phishing(set_id, email_id):
     email = db.session.query(Email).filter_by(set_id=set_id, email_id=email_id).first()
 
+    if email:
+        return jsonify(is_phishing=email.is_phishing)
     return jsonify(is_phishing=email.is_phishing)
     
 @app.route('/verify_phishing/<int:set_id>/<int:email_id>/feedback')
