@@ -15,7 +15,7 @@
         .container2 {
             max-width: 800px;
             margin: 20px auto;
-            margin-top:130px;
+            margin-top: 130px;
             padding: 20px;
             background-color: #fff; /* White container background */
             border-radius: 8px;
@@ -92,17 +92,17 @@
     <p>Phishing is a cybercrime tactic employed by individuals or groups to
         trick users into exposing sensitive information such as passwords, bank accounts, social security numbers,
         credit card numbers,
-        or personal identification details.<p/>
+        or personal identification details.</p>
 
     <p> Typically initiated via email, phishing attempts often
         impersonate entities like banks, online retailers, or government agencies.
         These fraudulent messages appear legitimate and prompt recipients to click on links, download attachments,
-        or enter confidential data on fake websites designed to resemble real ones.<p/>
+        or enter confidential data on fake websites designed to resemble real ones.</p>
 
     <p> Once obtained,
         the stolen information can be used for identity theft, financial fraud, or other malicious purposes.
         Phishing attacks exploit human vulnerabilities rather than technical weaknesses, making awareness and
-        caution essential defenses against falling victim to such scams..</p>
+        caution essential defenses against falling victim to such scams.</p>
 
     <h2>Tips For How to Avoid and Defend Yourself from Phishing Scams</h2>
     <ul class="learningList">
@@ -123,10 +123,64 @@
         <li>Will sometimes contain grammatical errors or spelling mistakes in the email, indicating fraud </li>
         <li> Will use emails that mimic real companies but have subtle variations </li>
     </ul>
+
+    <!-- Phishing Quiz -->
+    <h2>Test Your Knowledge: Phishing Quiz</h2>
+    <form id="phishingQuiz">
+        <p>1. What is phishing?</p>
+        <input type="radio" id="q1a" name="q1" value="a">
+        <label for="q1a">A way to protect your sensitive information </label><br>
+        <input type="radio" id="q1b" name="q1" value="b">
+        <label for="q1b">A cybercrime tactic to trick users into revealing sensitive information</label><br>
+        <input type="radio" id="q1c" name="q1" value="c">
+        <label for="q1c">Hacking into emails </label><br>
+
+        <p>2. How can you avoid falling victim to phishing scams?</p>
+        <input type="checkbox" id="q2a" name="q2" value="a">
+        <label for="q2a">Quit your job</label><br>
+        <input type="checkbox" id="q2b" name="q2" value="b">
+        <label for="q2b">Verify incoming emails to confirm their authenticity</label><br>
+        <input type="checkbox" id="q2c" name="q2" value="c">
+        <label for="q2c">Share your password with your company </label><br>
+
+        <button type="button" onclick="submitQuiz()">Submit</button>
+    </form>
+    <div id="quizResult"></div>
 </div>
+
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
 <script src="js/scripts.js"></script>
+
+<script>
+    function submitQuiz() {
+        var q1 = document.querySelector('input[name="q1"]:checked');
+        var q2 = document.querySelectorAll('input[name="q2"]:checked');
+
+        var q1Answer = "b";
+        var q2Answers = ["b"];
+
+        var score = 0;
+
+        if (q1 && q1.value === q1Answer) {
+            score++;
+        }
+
+        for (var i = 0; i < q2.length; i++) {
+            if (q2Answers.includes(q2[i].value)) {
+                score++;
+            }
+        }
+
+        var quizResult = document.getElementById("quizResult");
+        quizResult.innerHTML = "You scored " + score + " out of 2.";
+        if (score === 2) {
+            quizResult.innerHTML += " Well done!";
+        } else {
+            quizResult.innerHTML += " You might want to review the material.";
+        }
+    }
+</script>
 </body>
 </html>
