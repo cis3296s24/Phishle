@@ -23,6 +23,7 @@ class Email(db.Model):
     attachment = db.Column(db.String(120), nullable=False)
     link = db.Column(db.String(120), nullable = False)
     is_phishing = db.Column(db.Boolean, nullable = False, default = False)
+    feedback = db.Column(db.String(240), nullable = False)
 
 class User(db.Model):
     __tablename__ = 'Users'
@@ -109,9 +110,15 @@ def latest_set_id():
 def verify_phishing(set_id, email_id):
     email = db.session.query(Email).filter_by(set_id=set_id, email_id=email_id).first()
 
-
     if email:
         return jsonify(is_phishing=email.is_phishing)
+    return jsonify(is_phishing=email.is_phishing)
+    
+@app.route('/verify_phishing/<int:set_id>/<int:email_id>/feedback')
+def feedback(set_id, email_id):
+    email = db.session.query(Email).filter_by(set_id=set_id, email_id=email_id).first()
+
+    return jsonify(feedback=email.feedback)
 
 if __name__ == '__main__':
     app.run(debug=True)

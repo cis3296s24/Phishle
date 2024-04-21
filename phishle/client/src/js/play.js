@@ -8,7 +8,6 @@ function fetchLatestSetId() {
             }
         })
         .then(data => {
-            console.log('Fetched latest set ID:', data.latest_set_id);
             return data.latest_set_id;
         })
         .catch(error => {
@@ -88,24 +87,58 @@ function verifyPhishing(setId, emailId) {
         .then(response => response.json())
         .then(result => {
             const feedbackElement = document.getElementById('feedback');
+            if (!feedbackElement) {
+                console.error('Feedback element not found in the document.');
+                return; // Exit the function if no element is found
+            }
             const buttons = document.querySelectorAll('button');
 
             buttons.forEach(button => {
                 button.disabled = true;
             });
-
-            if (result.is_phishing) {
-                feedbackElement.innerText = 'Correct! This email is a phishing attempt.';
-                feedbackElement.style.color = 'green';
-            } else {
-                feedbackElement.innerText = 'Incorrect. This email is not a phishing attempt.';
-                feedbackElement.style.color = 'red';
-            }
+            
+            getFeedback(setId, emailId)
+                .then(feedback => {
+                    feedbackElement.innerText = feedback;
+                    showModal(result.is_phishing);
+                });
         })
         .catch(error => {
             console.error('Error during phishing verification:', error);
         });
 }
+
+function getFeedback(setId, emailId){
+    return fetch(`http://localhost:5000/verify_phishing/${setId}/${emailId}/feedback`)
+        .then(response => response.json())
+        .then(data => {
+            return data.feedback; 
+        })
+        .catch(error => {
+            console.error('Error fetching feedback:', error);
+            return 'Error fetching feedback'; 
+        });
+}
+
+function showModal(isPhishing) {
+    const modal = document.getElementById('feedbackModal');
+    const closeButton = document.querySelector('.close');
+    
+    modal.style.display = 'block';
+    feedback.style.color = isPhishing ? 'green' : 'red';
+
+    closeButton.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+}
+
+
 async function initializePage() {
     const latestSetId = await fetchLatestSetId();
 
