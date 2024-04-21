@@ -22,6 +22,7 @@ class Email(Base):
     attachment = Column(String(120), nullable=False)
     link = Column(String(120), nullable=False)
     is_phishing = Column(Boolean, nullable=False, default=False)
+    feedback = Column(String(240), nullable = False)
 
 # Scenario database model
 class Scenario(Base):
@@ -54,6 +55,70 @@ def generate_emails():
 
     latest_set_id = initialize_database()
     set_id = latest_set_id + 1
+
+    
+    # Select a random element and number
+    random_element = random.choice(elements_list)
+    random_number = randint(1, 3)
+
+    prompt = f"""
+    I want you to generate a set of 3 emails. One of the emails in the set is a subtle phishing attempt by an adversary. The other two emails in the set are legitimate emails that could be mistaken as a phishing attempt. 
+
+    Each email should have the following sections:
+    From: <email address>
+    To: <email address>
+    Subject: <subject line>
+    Body: At least 3 sentences
+    Closing: <closing statement>
+
+    All emails in the set are related to a certain scenario which is clearly identified at the beginning of the set. 
+
+    The phishing email contains ONLY the following distinguishing element: {random_element}. Every other part of the phishing email must feel legitimate. If the distinguishing element is an unsecured and suspicious link, the other legitimate emails in the set contain a legitimate link. If the distinguishing element is an unexpected and suspicious attachment, the other legitimate emails in the set contains an attachment in the following format 'name.filetype'.
+
+    I want the phishing email to be email number {random_number}. Do not include any extra explanations."
+
+    The scenario and the emails should follow this exact structure:
+    Scenario: [Describe in 3 words]
+
+    Email 1:
+    From: [Insert sender's email address]
+    To: [Insert recipient's email address]
+    Subject: [Insert subject of the email]
+    Body: [Insert a detailed message, making sure it contains multiple sentences.]
+    Closing: [Insert a regards message, but on a single line]
+    Attachment: [If there is no attachment, write 'none']
+    Link: [If there is no link, write 'none']
+    Feedback: [Insert Feedback on why this email is/is not the phishing attempt]
+
+    Email 2:   
+    From: [Insert sender's email address]
+    To: [Insert recipient's email address]
+    Subject: [Insert subject of the email]
+    Body: [Insert a detailed message, making sure it contains multiple sentences.]
+    Closing: [Insert a regards message, but on a single line]
+    Attachment: [If there is no attachment, write 'none']
+    Link: [If there is no link, write 'none']
+    Feedback: [Insert Feedback on why this email is/is not the phishing attempt]
+
+    Email 3:
+    From: [Insert sender's email address]
+    To: [Insert recipient's email address]
+    Subject: [Insert subject of the email]
+    Body: [Insert a detailed message, making sure it contains multiple sentences.]
+    Closing: [Insert a regards message, but on a single line]
+    Attachment: [If there is no attachment, write 'none']
+    Link: [If there is no link, write 'none']
+    Feedback: [Insert Feedback on why this email is/is not the phishing attempt]
+
+    Please ensure each field starts on a new line exactly as shown, and follows the punctuation and format exactly as specified. The content should be clear, professional, and realistic. 
+
+
+    """
+    
+    # Getting the response from GPT-4t
+    response = get_response(prompt) 
+    print(response)
+    scenario, parsed_emails = parse_emails(response)
     new_scenario = False
 
     while not new_scenario:
@@ -136,7 +201,8 @@ def generate_emails():
                 closing=email_data['closing'],
                 attachment=email_data['attachment'],
                 link=email_data['link'],
-                is_phishing=(email_index == random_number) 
+                is_phishing=(email_index == random_number),
+                feedback=email_data['feedback']
             )
 
             db_session.add(new_email)
@@ -152,14 +218,15 @@ def parse_emails(email_content):
     emails = []
     
     email_pattern = re.compile(
-        r"From:\s*(.+?)\n" +  
-        r"To:\s*(.+?)\n" +  
-        r"Subject:\s*(.+?)\n" +  
-        r"Body:\s*(.+?)\n" +  
-        r"Closing:\s*(.+?)\n" +  
+        r"From:\s*(.+?)\n" +
+        r"To:\s*(.+?)\n" +
+        r"Subject:\s*(.+?)\n" +
+        r"Body:\s*(.+?)\n" +
+        r"Closing:\s*(.+?)\n" +
         r"Attachment:\s*(.+?)\n" +
-        r"Link: \s*(.+?)(?:\n|$)",
-        re.DOTALL  
+        r"Link:\s*(.+?)\n" +
+        r"Feedback:\s*(.+?)(?:\n|$)",  
+        re.DOTALL
     )
 
     # Splitting the scenario from the email content
@@ -177,7 +244,8 @@ def parse_emails(email_content):
                 "body": match.group(4).strip(),
                 "closing": match.group(5).strip(),
                 "attachment": match.group(6).strip(),
-                "link": match.group(7).strip()
+                "link": match.group(7).strip(),
+                "feedback": match.group(8).strip()
             })
         else:
             print("Failed to parse some emails correctly:", email_text)
