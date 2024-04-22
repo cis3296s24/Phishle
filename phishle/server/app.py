@@ -171,7 +171,7 @@ def createLeaderboard():
 
 @app.route('/updateLeaderboard', methods=['POST'])
 @cross_origin()
-def fillLeaderboard():
+def updateLeaderboard():
     data = request.json
     group_id = data.get('group_id')
     group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
