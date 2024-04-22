@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
+import random
 
 
 app = Flask(__name__)
@@ -47,6 +48,132 @@ class Leaderboard(db.Model):
     __tablename__ = 'Leaderboards'
     leaderboard_id = db.Column(db.Integer, primary_key=True) 
     userranks = db.Column(db.String(500), nullable=False) #user_id, currentstreak, longeststreak
+    user_ranks = db.Column(db.String(500), nullable=False) #user_id, currentstreak
+
+@app.route('/joinGroup', methods=['POST'])
+@cross_origin()
+def joinGroup():
+    data = request.json
+    Username = data.get('Username')
+    GroupCode = data.get('GroupCode')
+    user = db.session.query(User).filter(User.username == Username).first()  # finds user with matching username
+    group = db.session.query(Group).filter(Group.group_code == GroupCode).first()  # finds group with matching group code
+    if user and group:  # checks if user and group exist
+        if user.group_id == 0:  # checks if user is already in a group
+            if group.group_leader != Username:  # checks if user is not the group leader
+                group.group_members = group.group_members + ',' + Username  # adds user to group
+                user.group_id = group.group_id  # sets user's group id to group's id
+                db.session.commit()
+                return jsonify({"success": True, "message": "User successfully joined group"}), 200
+            else:
+                return jsonify({"success": False, "message": "User is already the group leader"}), 400  # HTTP 400 Bad Request
+        else: 
+            return jsonify({"success": False, "message": "User is already in a group"}), 400  # HTTP 400 Bad Request
+    else: 
+        return jsonify({"success": False, "message": "User or group does not exist"}), 400  # HTTP 400 Bad Request
+    
+@app.route('/createGroup', methods=['POST'])
+@cross_origin()
+def createGroup():
+    data = request.json
+    Username = data.get('Username')
+    GroupName = data.get('GroupName')
+    user = db.session.query(User).filter(User.username == Username).first() # finds user with matching username
+    if user: # checks if user exists
+        if user.group_id == 0: # checks if user is not already in a group
+            group = Group(group_name=GroupName, group_code=random, group_leader=Username, group_members=Username, group_leaderboard_id=0) # creates new group
+            db.session.add(group)
+            db.session.commit()
+            user.group_id = group.group_id # sets user's group id to group's id
+            db.session.commit()
+            return jsonify({"success": True, "message": "Group successfully created"}), 201
+        else:
+            return jsonify({"success": False, "message": "User is already in a group"}), 400  # HTTP 400 Bad Request
+    else:
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+    
+@app.route('/leaveGroup', methods=['POST'])
+@cross_origin()
+def leaveGroup():
+    data = request.json
+    Username = data.get('Username')
+    user = db.session.query(User).filter(User.username == Username).first() # finds user with matching username
+    if user: # checks if user exists
+        if user.group_id != 0: # checks if user is in a group
+            group = db.session.query(Group).filter(Group.group_id == user.group_id).first() # finds group with matching group id
+            if group.group_leader == Username: # checks if user is the group leader
+                if group.group_members != Username: # checks if there are other members in the group
+                    group.group_leader = group.group_members.split(',')[0] # sets the first member in the group as the new group leader
+                    group.group_members = group.group_members.replace(group.group_members.split(',')[0] + ',', '') # removes the new group leader from the group members
+                    user.group_id = 0 # sets user's group id to 0
+                    db.session.commit()
+                    return jsonify({"success": True, "message": "User successfully left group"}), 200
+                else:
+                    db.session.delete(group) # deletes group if there are no other members
+                    user.group_id = 0 # sets user's group id to 0
+                    db.session.commit()
+                    return jsonify({"success": True, "message": "User successfully left group"}), 200
+            else:
+                group.group_members = group.group_members.replace(',' + Username, '') # removes user from group members
+                user.group_id = 0 # sets user's group id to 0
+                db.session.commit()
+                return jsonify({"success": True, "message": "User successfully left group"}), 200
+        else:
+            return jsonify({"success": False, "message": "User is not in a group"}), 400  # HTTP 400 Bad Request
+    else:
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+
+@app.route('/getGroup', methods=['POST'])
+@cross_origin()
+def getGroup():
+    data = request.json
+    Username = data.get('Username')
+    user = db.session.query(User).filter(User.username == Username).first() # finds user with matching username
+    if user: # checks if user exists
+        if user.group_id != 0: # checks if user is in a group
+            group = db.session.query(Group).filter(Group.group_id == user.group_id).first() # finds group with matching group id
+            return jsonify({"success": True, "group_name": group.group_name, "group_leader": group.group_leader, "group_members": group.group_members.split(','), "group_leaderboard_id": group.group_leaderboard_id}), 200
+        else:
+            return jsonify({"success": False, "message": "User is not in a group"}), 400  # HTTP 400 Bad Request
+    else:
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+    
+@app.route('/createLeaderboard', methods=['POST'])
+@cross_origin()
+def createLeaderboard():
+    data = request.json
+    group_id = data.get('group_id')
+    group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
+    if group.group_id != 0: # checks if user is in a group
+        leaderboard = Leaderboard(user_ranks='')
+        db.session.add(leaderboard)
+        db.session.commit()
+        group.group_leaderboard_id = leaderboard.leaderboard_id # sets group's leaderboard id to leaderboard's id
+        db.session.commit()
+        return jsonify({"success": True, "message": "Leaderboard successfully created"}), 201
+    else:
+        return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
+    
+
+@app.route('/getLeaderboard', methods=['POST'])
+@cross_origin()
+def getLeaderboard():
+    data = request.json
+    group_id = data.get('group_id')
+    group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
+    if group.group_id != 0: # checks if user is in a group
+        leaderboard = db.session.query(Leaderboard).filter(Leaderboard.leaderboard_id == group.group_leaderboard_id).first() # finds leaderboard with matching leaderboard id
+        user_ranks = leaderboard.user_ranks.split(',') # splits user ranks into a list
+        user_ranks = [user_rank.split(':') for user_rank in user_ranks] # splits each user rank into a list
+        user_ranks = [[int(user_rank[0]), int(user_rank[1])] for user_rank in user_ranks] # converts user ids and current streaks to integers
+        user_ranks = sorted(user_ranks, key=lambda x: x[1], reverse=True) # sorts user ranks by current streaks in descending order
+        user_ranks = [str(user_rank[0]) + ':' + str(user_rank[1]) for user_rank in user_ranks] # converts user ids and current streaks back to strings
+        user_ranks = ','.join(user_ranks) # joins user ranks into a string
+        leaderboard.user_ranks = user_ranks # sets leaderboard's user ranks to the new string
+        db.session.commit()
+        return jsonify({"success": True, "user_ranks": user_ranks}), 200
+    else:
+        return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
 
 
 @app.route('/userlogin', methods=['POST'])
@@ -60,7 +187,6 @@ def userlogin():
         return jsonify({"success": True}), 200
     else:
         return jsonify({"success": False}), 
-
 
 @app.route('/userregister', methods=['POST'])
 @cross_origin()
@@ -119,6 +245,5 @@ def feedback(set_id, email_id):
     email = db.session.query(Email).filter_by(set_id=set_id, email_id=email_id).first()
 
     return jsonify(feedback=email.feedback)
-
 if __name__ == '__main__':
     app.run(debug=True)
