@@ -274,6 +274,8 @@ def getGroupLeader():
         return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
     
 
+with app.app_context():
+    db.create_all()
 
 @app.route('/userlogin', methods=['POST'])
 @cross_origin()
@@ -282,7 +284,7 @@ def userlogin():
     Username = data.get('Username')
     Password = data.get('Password')
     user = db.session.query(User).filter(User.username == Username).first()  # finds user with matching username
-    if user and user.password == Password:  # checks if password is correct
+    if user and user.password == Password:  
         return jsonify({"success": True}), 200
     else:
         return jsonify({"success": False}), 
@@ -332,6 +334,7 @@ def latest_set_id():
     return jsonify(latest_set_id=latest_set_id)
 
 @app.route('/verify_phishing/<int:set_id>/<int:email_id>')
+@cross_origin()
 def verify_phishing(set_id, email_id):
     email = db.session.query(Email).filter_by(set_id=set_id, email_id=email_id).first()
 
@@ -340,9 +343,9 @@ def verify_phishing(set_id, email_id):
     return jsonify(is_phishing=email.is_phishing)
     
 @app.route('/verify_phishing/<int:set_id>/<int:email_id>/feedback')
+@cross_origin()
 def feedback(set_id, email_id):
     email = db.session.query(Email).filter_by(set_id=set_id, email_id=email_id).first()
-
     return jsonify(feedback=email.feedback)
 if __name__ == '__main__':
     app.run(debug=True)
