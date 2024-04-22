@@ -82,6 +82,9 @@ $(function(){
         $("#signUp").show();
         $("#profileDetails").attr('disabled', true);
         $("#userCard").hide();
+        $("#group-create-form-container").hide();
+        $("#group-join-form-container").hide();
+        $("#groupCard").hide();
     }
 
     var req  = $.ajax({url:"http://localhost:5000/getGlobalLeaderboard", method:"GET", success: function(data){
