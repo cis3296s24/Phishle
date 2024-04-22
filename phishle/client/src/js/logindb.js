@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             if(data.success) {
+                sessionStorage.setItem("username", username)
                 alert("Login successful!");
             } else {
                 alert("Login failed!");
