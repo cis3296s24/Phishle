@@ -49,6 +49,21 @@ class Leaderboard(db.Model):
     leaderboard_id = db.Column(db.Integer, primary_key=True) 
     user_ranks = db.Column(db.String(500), nullable=False) #user_id, currentstreak
 
+@app.route('/joinGlobalGroup', methods=['POST'])
+@cross_origin()
+def joinGlobalGroup():
+    data = request.json
+    Username = data.get('Username')
+    user = db.session.query(User).filter(User.username == Username).first()  # finds user with matching username
+    if user:  # checks if user exists
+        group = db.session.query(Group).filter(Group.group_name == 'Global Group').first()  # finds group with matching group name
+        group.group_members = group.group_members + ',' + Username  # adds user to group
+        db.session.commit()
+        return jsonify({"success": True, "message": "User successfully joined global group"}), 200
+    else: 
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+
+
 @app.route('/joinGroup', methods=['POST'])
 @cross_origin()
 def joinGroup():
@@ -154,9 +169,9 @@ def createLeaderboard():
         return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
     
 
-@app.route('/getLeaderboard', methods=['POST'])
+@app.route('/updateLeaderboard', methods=['POST'])
 @cross_origin()
-def getLeaderboard():
+def fillLeaderboard():
     data = request.json
     group_id = data.get('group_id')
     group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
@@ -173,6 +188,91 @@ def getLeaderboard():
         return jsonify({"success": True, "user_ranks": user_ranks}), 200
     else:
         return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
+    
+@app.route('/updateStreak', methods=['POST'])
+@cross_origin()
+def updateStreak():
+    data = request.json
+    Username = data.get('Username')
+    user = db.session.query(User).filter(User.username == Username).first() # finds user with matching username
+    if user: # checks if user exists
+        user.currentstreak = user.currentstreak + 1 # increments user's current streak
+        if user.currentstreak > user.longeststreak: # checks if user's current streak is longer than their longest streak
+            user.longeststreak = user.currentstreak # sets user's longest streak to their current streak
+        db.session.commit()
+        return jsonify({"success": True, "message": "User's streak successfully updated"}), 200
+    else:
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+
+@app.route('/resetStreak', methods=['POST'])
+@cross_origin()
+def resetStreak():
+    data = request.json
+    Username = data.get('Username')
+    user = db.session.query(User).filter(User.username == Username).first() # finds user with matching username
+    if user: # checks if user exists
+        user.currentstreak = 0 # resets user's current streak
+        db.session.commit()
+        return jsonify({"success": True, "message": "User's streak successfully reset"}), 200
+    else:
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+
+@app.route('/getLeaderboard', methods=['POST'])
+@cross_origin()
+def getLeaderboard():
+    data = request.json
+    group_id = data.get('group_id')
+    group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
+    if group.group_id != 0: # checks if user is in a group
+        leaderboard = db.session.query(Leaderboard).filter(Leaderboard.leaderboard_id == group.group_leaderboard_id).first() # finds leaderboard with matching leaderboard id
+        return jsonify({"success": True, "user_ranks": leaderboard.user_ranks}), 200
+    else:
+        return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
+
+@app.route('/getStreak', methods=['POST'])
+@cross_origin()
+def getStreak():
+    data = request.json
+    Username = data.get('Username')
+    user = db.session.query(User).filter(User.username == Username).first() # finds user with matching username
+    if user: # checks if user exists
+        return jsonify({"success": True, "currentstreak": user.currentstreak, "longeststreak": user.longeststreak}), 200
+    else:
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+    
+@app.route('/getGroupCode', methods=['POST'])
+@cross_origin()
+def getGroupCode():
+    data = request.json
+    group_id = data.get('group_id')
+    group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
+    if group.group_id != 0: # checks if user is in a group
+        return jsonify({"success": True, "group_code": group.group_code}), 200
+    else:
+        return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
+    
+@app.route('/getGroupMembers', methods=['POST'])
+@cross_origin()
+def getGroupMembers():
+    data = request.json
+    group_id = data.get('group_id')
+    group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
+    if group.group_id != 0: # checks if user is in a group
+        return jsonify({"success": True, "group_members": group.group_members.split(',')}), 200
+    else:
+        return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
+
+@app.route('/getGroupLeader', methods=['POST'])
+@cross_origin()
+def getGroupLeader():
+    data = request.json
+    group_id = data.get('group_id')
+    group = db.session.query(Group).filter(Group.group_id == group_id).first() # finds group with matching id
+    if group.group_id != 0: # checks if user is in a group
+        return jsonify({"success": True, "group_leader": group.group_leader}), 200
+    else:
+        return jsonify({"success": False, "message": "Group does not exist"}), 400  # HTTP 400 Bad Request
+    
 
 
 @app.route('/userlogin', methods=['POST'])
