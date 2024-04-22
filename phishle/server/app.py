@@ -224,16 +224,37 @@ def resetStreak():
 
 @app.route('/getGlobalLeaderboard', methods=['GET'])
 @cross_origin()
-def getLeaderboard():
+def getGlobalLeaderboard():
     db = pymysql.connect(host='localhost', user='phishle', password='phishlepasswd', database='phishle_database')
     cursor = db.cursor()
-    data = cursor.execute("SELECT username, currentstreak, longeststreak from users order by currentstreak")
+    data = cursor.execute("SELECT username, currentstreak, longeststreak from users order by currentstreak desc")
     data = cursor.fetchall()
     if data:
         return jsonify(data), 200
     else:
         return jsonify({"success": False, "message": "Error Fetching Leaderboard"}), 400  # HTTP 400 Bad Request
     
+@app.route('/getProfileInfo/<username>', methods=['GET'])
+@cross_origin()
+def getProfileInfo(username):
+    info = db.session.query(User).filter(User.username == username).first()
+    if info:
+        return jsonify({"username":info.username, "currentstreak":info.currentstreak, "longeststreak":info.longeststreak, "group_id":info.group_id}), 200
+    else:
+        return jsonify({"success": False, "message": "User does not exist"}), 400  # HTTP 400 Bad Request
+    
+@app.route('/getGroupLeaderboard/<int:groupId>', methods=['GET'])
+@cross_origin()
+def getGroupLeaderboard(groupId):
+    db = pymysql.connect(host='localhost', user='phishle', password='phishlepasswd', database='phishle_database')
+    cursor = db.cursor()
+    data = cursor.execute(f"SELECT username, currentstreak, longeststreak from users where group_id ={groupId} order by currentstreak desc")
+    data = cursor.fetchall()
+    if data:
+        return jsonify(data), 200
+    else:
+        return jsonify({"success": False, "message": "Error Fetching Leaderboard"}), 400  # HTTP 400 Bad Request
+
 
 
 @app.route('/getStreak', methods=['POST'])

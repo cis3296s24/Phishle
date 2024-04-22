@@ -36,24 +36,22 @@
     <div class="profileSection">
         <div class="card streakCard">
             <div class="card-body">
-            <h2 class="card-title">Your Streak Is: <h1 style="font-weight:bold;font-size:50px">0 days</h1></h2><br/>
-            <h5 class="card-subtitle mb-2 text-body-secondary bold">Username: Not signed in</h5>
-            <p class="card-text">You are not currently signed in. To track your streak and see yourself on the leaderboard, make an account or sign in below!</p>
+            <h2 class="card-title">Your Streak Is: <h1 id="streak" style="font-weight:bold;font-size:50px">0 days</h1></h2><br/>
+            <h5 class="card-subtitle mb-2 text-body-secondary bold">Username: <span id="username"></span></h5>
+            <p id="notsignedin" style="display:none" class="card-text">You are not currently signed in. To track your streak and see yourself on the leaderboard, make an account or sign in below!</p>
             <button id='profileDetails' class="btn btn-secondary">Edit Profile</button>
-            <button id='signUp' class="btn btn-primary">Sign Up/Login</button>
+            <button id='signUp' style="display:none" class="btn btn-primary">Sign Up/Login</button>
             </div>
         </div>
         <div class="card playerCard">
             <div class="card-body">
-                <h1>Guest</h1>
-                <h3 style="text-align: left;">Leaderboard Ranking: NA<span style="float: right;">Games Played: 0</span></h3>
-                <h3 style="text-align: left;">Play Streak: 0<span style="float: right;">Games Won: 0</span></h3>
-                <h3 style="text-align: left;">Win Streak: 0<span style="float: right;">Win Lost: 0</span></h3>
+                <h1 id="cardusername"></h1>
+                <h3 style="text-align: left;">Global Ranking: <span id='globalRanking'></span><span style="float: right;">Group Ranking: <span id="groupRanking"></span></span></h3>
                 <h3 style="text-align: left;">Joined: 2024 April 16<span style="float: right;">Accuracy: 0%</span></h3>
             </div>
         </div>
         <div class="table-responsive">
-            <table id="leaderboard" class="table caption-top">
+            <table id="globalLeaderboard" class="table caption-top">
                 <h2>Global Leaderboard</h2>
                 <thead class="table-dark">
                 <tr>
@@ -63,7 +61,24 @@
                     <th scope="col">High Streak</th>
                 </tr>
                 </thead>
-                <tbody id = "globalLeaderboard">
+                <tbody id = "globalLeaderboardBody">
+                
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <table id="groupLeaderboard" class="table caption-top">
+                <h2>Group Leaderboard</h2>
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Place</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Current Streak</th>
+                    <th scope="col">High Streak</th>
+                </tr>
+                </thead>
+                <tbody id = "groupLeaderboardBody">
                 
                 </tbody>
             </table>
