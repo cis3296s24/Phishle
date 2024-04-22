@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    document.getElementById("loginbtn").addEventListener("click", function() {
+    document.getElementById("loginbtn").addEventListener("click", function(event) {
+        event.preventDefault();
         const username = document.getElementById("loginUsername").value;
         const password = document.getElementById("loginPassword").value;
         
@@ -23,10 +24,12 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch((error) => {
             console.error('Error:', error);
         });
+
     });
 
     // Add event listener for register button
-    document.getElementById("registerbtn").addEventListener("click", function() {
+    document.getElementById("registerbtn").addEventListener("click", function(event) {
+        event.preventDefault();
         const username = document.getElementById("regUsername").value;
         const password = document.getElementById("regPassword").value;
         const password2 = document.getElementById("regPassword2").value;
