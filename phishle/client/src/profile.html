@@ -85,7 +85,13 @@
                 <button type="submit" id="joinGroupbtn">Join Group</button>
             </form>
         </div>
-        <button type="button" id="leaveGroupbtn">Leave Group</button>
+        <div id='groupCard' class="card groupCard">
+            <div class="card-body">
+                <h1 id="cardGroupName"></h1>
+                <h3 style="text-align: left;">Group Code: <span id='groupCodeCard'></span><span style="float: right;">Group Leader: <span id="groupLeaderCard"></span></span></h3>
+                <button type="button" id="leaveGroupbtn">Leave Group</button>
+            </div>
+        </div>
         <div class="table-responsive">
             <table id="groupLeaderboard" class="table caption-top">
                 <h2>Group Leaderboard</h2>

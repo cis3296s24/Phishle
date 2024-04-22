@@ -11,6 +11,47 @@ $(function(){
             $("#cardusername").html(data.username);
             usergroup = data.group_id
             if(usergroup != 0){
+                
+                fetch('http://localhost:5000/getGroup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({Username: data.username}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        $("#cardGroupName").html(data.group_name);
+                        $("#groupLeaderCard").html(data.group_leader);
+                    } else {
+                        alert("Group Check Info Failed");
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+                fetch('http://localhost:5000/getGroupCode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({group_id: data.group_id}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        $("#groupCodeCard").html(data.group_code);
+                    } else {
+                        alert("Group Check Info Failed");
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+
                 var grpurl = "http://localhost:5000/getGroupLeaderboard/" + usergroup
                 var grpReq = $.ajax({url:grpurl, method:"GET", success: function(data){
                     var tableString = "";
