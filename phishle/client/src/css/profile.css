@@ -18,3 +18,17 @@
     margin-right:auto;
     background-color:lightgray;
 }
+
+.group-create-form-container{
+    width: 100%;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:lightgray;
+}
+
+.group-join-form-container{
+    width: 100%;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:lightgray;
+}

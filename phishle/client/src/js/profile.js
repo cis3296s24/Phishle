@@ -78,3 +78,71 @@ $(function(){
     
 });
 
+document.getElementById("createGroupbtn").addEventListener("click", function() {
+    const groupName = document.getElementById("groupName").value;
+
+    fetch('http://localhost:5000/createGroup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({Username: sessionStorage.getItem("username"), GroupName: groupName}),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            alert("Group creation successful!");
+        } else {
+            alert("Group creation Failed!");
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+
+document.getElementById("joinGroupbtn").addEventListener("click", function() {
+    const groupCode = document.getElementById("groupCode").value;
+
+    fetch('http://localhost:5000/joinGroup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({Username: sessionStorage.getItem("username"), GroupCode: groupCode}),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            alert("Group joining successful!");
+        } else {
+            alert("Group joining Failed!");
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+document.getElementById("leaveGroupbtn").addEventListener("click", function() {
+
+    fetch('http://localhost:5000/leaveGroup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({Username: sessionStorage.getItem("username")}),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            alert("Group leaving successful!");
+        } else {
+            alert("Group leaving Failed!");
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
