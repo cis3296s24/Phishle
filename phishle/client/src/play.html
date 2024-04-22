@@ -28,12 +28,14 @@
         </div>
     </nav>
 
-    <div id="emailList">
-    </div>
+    <div id="emailList"></div>
 
-    <div id="feedback"></div>
-
-    <script src="js/play.js"></script>
+    <div id="feedbackModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="feedback"></p>
+        </div>
+      </div>
 
     <!-- Footer-->
     <footer class="py-5 bg-dark">
@@ -43,6 +45,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
-
+    
+    <script src="js/play.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #9aceff !important; /* Light blue background color */
+            background-color: #add8e6 !important; /* Light blue background color */
             color: #333;
             margin: 0;
             padding: 0;
@@ -34,6 +34,7 @@
 
         li {
             margin-bottom: 10px;
+            list-style: none;
         }
 
         /* Additional styling for headings */
@@ -53,16 +54,22 @@
             font-size: 20px;
         }
 
-        /* Styling for lists */
-        .learningList {
-            list-style-type: disc;
-            margin-bottom: 20px;
-            padding-left: 20px;
+        /* Styling for checkmarks */
+        .checkmark {
+            margin-right: 5px;
+            color: green;
         }
 
         /* Styling for paragraphs */
         p {
             text-align: justify;
+        }
+
+        /* Styling for bullet points */
+        .detectPhishingList {
+            list-style-type: disc;
+            margin-bottom: 20px;
+            padding-left: 20px;
         }
     </style>
     <link href="css/styles.css" rel="stylesheet" />
@@ -104,24 +111,24 @@
         Phishing attacks exploit human vulnerabilities rather than technical weaknesses, making awareness and
         caution essential defenses against falling victim to such scams.</p>
 
-    <h2>Tips For How to Avoid and Defend Yourself from Phishing Scams</h2>
+    <h2>Defend Yourself from Phishing Scams</h2>
     <ul class="learningList">
-        <li>Avoid clicking on external links in emails unless you are certain about the contents</li>
-        <li>Secure accounts with multi-factor authentication</li>
-        <li> Verify incoming emails to confirm their authenticity, ensuring they originate from legitimate sources.</li>
-        <li>If the email is from a large company, you can directly call the company to confirm </li>
-        <li>Never give your password or sensitive account information out</li>
-        <li>Regularly check logins and activity on accounts to make sure you have not become a victim of phishing</li>
-        <li>If you do become a victim, contact the related companies immediately and have them lock your account</li>
+        <li><span class="checkmark">&#10003;</span> Avoid clicking on external links in emails unless you are certain about the contents</li>
+        <li><span class="checkmark">&#10003;</span> Secure accounts with multi-factor authentication</li>
+        <li><span class="checkmark">&#10003;</span> Verify incoming emails to confirm their authenticity, ensuring they originate from legitimate sources.</li>
+        <li><span class="checkmark">&#10003;</span> If the email is from a large company, you can directly call the company to confirm</li>
+        <li><span class="checkmark">&#10003;</span> Never give your password or sensitive account information out</li>
+        <li><span class="checkmark">&#10003;</span> Regularly check logins and activity on accounts to make sure you have not become a victim of phishing</li>
+        <li><span class="checkmark">&#10003;</span> If you do become a victim, contact the related companies immediately and have them lock your account</li>
     </ul>
 
     <h2>How to Detect Phishing Scams</h2>
-    <ul>
-        <li>Will attempt to get you to input information and solicit personal details </li>
-        <li>Will lure you with something enticing such as a coupon or refund for engagement </li>
-        <li>Will impersonate reputable companies, involving fabricated account issues to prompt actions </li>
-        <li>Will sometimes contain grammatical errors or spelling mistakes in the email, indicating fraud </li>
-        <li> Will use emails that mimic real companies but have subtle variations </li>
+    <ul class="detectPhishingList">
+        <li>* Will attempt to get you to input information and solicit personal details </li>
+        <li>* Will lure you with something enticing such as a coupon or refund for engagement </li>
+        <li>* Will impersonate reputable companies, involving fabricated account issues to prompt actions </li>
+        <li>* Will sometimes contain grammatical errors or spelling mistakes in the email, indicating fraud </li>
+        <li>* Will use emails that mimic real companies but have subtle variations </li>
     </ul>
 
     <!-- Phishing Quiz -->
@@ -184,3 +191,4 @@
 </script>
 </body>
 </html>
+
