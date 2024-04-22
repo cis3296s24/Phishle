@@ -6,6 +6,8 @@ $(function(){
         var prof = $.ajax({url:profileUrl, method:"GET", success: function(data){
             $("#username").html(data.username);
             $("#streak").html(data.currentstreak + " days")
+            $("#currentStreak").html(data.currentstreak + " days")
+            $("#highStreak").html(data.longeststreak + " days")
             $("#cardusername").html(data.username);
             usergroup = data.group_id
             if(usergroup != 0){
@@ -36,11 +38,9 @@ $(function(){
     }
     else{
         $("#notsignedin").show();
-        $("#signup").show();
+        $("#signUp").show();
         $("#profileDetails").attr('disabled', true);
-        $("#cardusername").html("Guest");
-        $("#groupRanking").html("N/A");
-        $("#globalRanking").html("N/A");
+        $("#userCard").hide();
     }
 
     var req  = $.ajax({url:"http://localhost:5000/getGlobalLeaderboard", method:"GET", success: function(data){
