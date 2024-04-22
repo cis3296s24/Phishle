@@ -59,7 +59,7 @@ __pycache__/
 *.pem
 
 # ignore venv files
-/venv
+phishle/server/venv
 
 # --------------------------------------------------------
 # BEGIN Explictly Allowed Files (i.e. do NOT ignore these)
