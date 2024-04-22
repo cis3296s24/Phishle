@@ -1,6 +1,5 @@
-// This JavaScript code snippet will help users to enter login/register data and send it as JSON.
 document.addEventListener("DOMContentLoaded", function() {
-    // Add event listener for login button
+
     document.getElementById("loginbtn").addEventListener("click", function() {
         const username = document.getElementById("loginUsername").value;
         const password = document.getElementById("loginPassword").value;
@@ -39,16 +38,23 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify({Username: username, Password: password, Password2: password2}),
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
         .then(data => {
-            if(data.success) {
+            if (data.success) {
                 alert("Registration successful!");
             } else {
-                alert("Registration failed!");
+                alert("Registration failed: " + data.message);
             }
         })
         .catch((error) => {
             console.error('Error:', error);
+            alert("Failed to connect to the server. Please check your connection and try again.");
         });
     });
+    
 });
