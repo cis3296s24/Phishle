@@ -20,10 +20,10 @@ $(function(){
                     body: JSON.stringify({Username: data.username}),
                 })
                 .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        $("#cardGroupName").html(data.group_name);
-                        $("#groupLeaderCard").html(data.group_leader);
+                .then(groupInfo => {
+                    if(groupInfo.success) {
+                        $("#cardGroupName").html(groupInfo.group_name);
+                        $("#groupLeaderCard").html(groupInfo.group_leader);
                     } else {
                         alert("Group Check Info Failed");
                     }
@@ -37,12 +37,12 @@ $(function(){
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({group_id: data.group_id}),
+                    body: JSON.stringify({group_id: usergroup}),
                 })
                 .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        $("#groupCodeCard").html(data.group_code);
+                .then(groupInfo2 => {
+                    if(groupInfo2.success) {
+                        $("#groupCodeCard").html(groupInfo2.group_code);
                     } else {
                         alert("Group Check Info Failed");
                     }
