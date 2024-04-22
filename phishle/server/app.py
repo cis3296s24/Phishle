@@ -47,7 +47,6 @@ class Group(db.Model):
 class Leaderboard(db.Model):
     __tablename__ = 'Leaderboards'
     leaderboard_id = db.Column(db.Integer, primary_key=True) 
-    userranks = db.Column(db.String(500), nullable=False) #user_id, currentstreak, longeststreak
     user_ranks = db.Column(db.String(500), nullable=False) #user_id, currentstreak
 
 @app.route('/joinGroup', methods=['POST'])
