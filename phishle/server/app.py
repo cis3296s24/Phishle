@@ -230,7 +230,7 @@ def resetStreak():
 def getGlobalLeaderboard():
     db = pymysql.connect(host='localhost', user='phishle', password='phishlepasswd', database='phishle_database')
     cursor = db.cursor()
-    data = cursor.execute("SELECT username, currentstreak, longeststreak from users order by currentstreak desc")
+    data = cursor.execute("SELECT username, currentstreak, longeststreak from Users order by currentstreak desc")
     data = cursor.fetchall()
     if data:
         return jsonify(data), 200
@@ -251,7 +251,7 @@ def getProfileInfo(username):
 def getGroupLeaderboard(groupId):
     db = pymysql.connect(host='localhost', user='phishle', password='phishlepasswd', database='phishle_database')
     cursor = db.cursor()
-    data = cursor.execute(f"SELECT username, currentstreak, longeststreak from users where group_id ={groupId} order by currentstreak desc")
+    data = cursor.execute(f"SELECT username, currentstreak, longeststreak from Users where group_id ={groupId} order by currentstreak desc")
     data = cursor.fetchall()
     if data:
         return jsonify(data), 200
