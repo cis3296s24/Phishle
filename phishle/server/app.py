@@ -318,7 +318,7 @@ def userlogin():
     if user and user.password == Password:  
         return jsonify({"success": True}), 200
     else:
-        return jsonify({"success": False}), 
+        return jsonify({"success": False}), 400
 
 @app.route('/userregister', methods=['POST'])
 @cross_origin()
