@@ -94,3 +94,24 @@
     text-decoration: none;
     cursor: pointer;
   }
+
+.btn {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 4px 2px;
+  font-size: 16px;
+  color: black;
+  background-color: #efefef;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid #000000;
+  border-radius: 2px;
+  box-shadow: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background: #333;
+  color: white;
+}
+
