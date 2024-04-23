@@ -37,17 +37,21 @@ function fetchEmails(setId) {
     });
 }
 
-let isAnyEmailClicked = false;
 function createEmailHtml(email) {
     const emailContainer = document.createElement('div');
     emailContainer.className = 'email-container';
 
     emailContainer.onclick = function() {
-        if (!isAnyEmailClicked) {
-            verifyPhishing(email.set_id, email.email_id);
-            isAnyEmailClicked = true; 
-            disableAllEmailContainers(); 
+        if (sessionStorage.getItem("hasPlayed") === "true") {
+            alert("You have already played this game.");
+            disableAllEmailContainers();
+            return; 
         }
+
+        verifyPhishing(email.set_id, email.email_id);
+
+        sessionStorage.setItem("hasPlayed", "true");
+        disableAllEmailContainers();
     };
 
     const emailHeader = document.createElement('div');
@@ -109,8 +113,22 @@ function verifyPhishing(setId, emailId) {
                 console.error('Feedback element not found in the document.');
                 return; 
             }
-
+            
             phishingResult = result.is_phishing ? 'HOOKED' : 'SAFE';
+
+            const username = sessionStorage.getItem("username");
+
+            const endpoint = result.is_phishing ? '/updateStreak' : '/resetStreak';
+
+            console.log("fucntion: " + endpoint)
+
+            fetch(`http://localhost:5000${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ Username: username }) 
+            });
   
             getFeedback(setId, emailId)
                 .then(feedback => {

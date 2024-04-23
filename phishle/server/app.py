@@ -318,7 +318,7 @@ def userlogin():
     if user and user.password == Password:  
         return jsonify({"success": True}), 200
     else:
-        return jsonify({"success": False}), 
+        return jsonify({"success": False}), 400
 
 @app.route('/userregister', methods=['POST'])
 @cross_origin()
@@ -330,9 +330,9 @@ def userregister():
 
     user = db.session.query(User).filter(User.username == Username).first()  # finds user with matching username
     if user:
-        return jsonify({"success": False, "message": "Username already exists"}), 409  # HTTP 409 Conflict
+        return jsonify({"success": False, "message": "Username already exists"}), 200  # HTTP 409 Conflict
     elif Password != Password2:  # checks if passwords match
-        return jsonify({"success": False, "message": "Passwords do not match"}), 400  # HTTP 400 Bad Request
+        return jsonify({"success": False, "message": "Passwords do not match"}), 200  # HTTP 400 Bad Request
     else:
         newuser = User(username=Username, password=Password, currentstreak=0, longeststreak=0, group_id=0)
         db.session.add(newuser)
