@@ -1,0 +1,79 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background:  white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.page-container {
+    background: white;
+    padding-top: 90px;
+    padding: 20px;
+    border-radius: 10px;
+    /* transform: rotate(-5deg); */
+}
+
+.phishle-logo img {
+    max-width: 400px; 
+    position: center;
+    margin-left: 140px;
+}
+
+h1 {
+    font-size: 7em;
+    font-weight: bold;
+    color: #333;
+}
+
+
+.hook {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.hook_special{
+    color: #e65646;
+}
+
+.button-container {
+    margin: 20px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 20px;
+    border-color: black;
+    background: white;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #333;
+    color: white;
+}
+
+.footer {
+    font-size: 1em;
+    color:#777;
+    margin-top: 20px;
+}
+
+.footer span {
+    display: block;
+    margin: 4px 0;
+}
+
+@media (min-width: 600px) {
+    .footer span {
+        display: inline;
+        margin: 0 10px;
+    }
+}
