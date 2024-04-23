@@ -93,9 +93,12 @@ def createGroup():
     Username = data.get('Username')
     GroupName = data.get('GroupName')
     user = db.session.query(User).filter(User.username == Username).first() # finds user with matching username
+    code = random.randint(1,300)
     if user: # checks if user exists
         if user.group_id == 0: # checks if user is not already in a group
-            group = Group(group_name=GroupName, group_code=random, group_leader=Username, group_members=Username, group_leaderboard_id=0) # creates new group
+            while db.session.query(Group).filter(Group.group_id == code).first():
+                code = random.randint(1,300)
+            group = Group(group_name=GroupName, group_code=code, group_leader=Username, group_members=Username, group_leaderboard_id=0) # creates new group
             db.session.add(group)
             db.session.commit()
             user.group_id = group.group_id # sets user's group id to group's id
