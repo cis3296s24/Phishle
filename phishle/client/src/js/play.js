@@ -160,15 +160,7 @@ function showModal(isPhishing) {
     modal.style.display = 'block';
     feedback.style.color = isPhishing ? 'green' : 'red';
 
-    closeButton.onclick = function() {
-        modal.style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    }
+    updateButtonVisibility();
 }
 
 let latestSetId = null;
@@ -194,10 +186,64 @@ document.getElementById('copyToClipboard').addEventListener('click', function() 
     }
 });
 
+function showModalOnFirstVisit() {
+    var hasVisited = sessionStorage.getItem("hasVisited");
+    if (!hasVisited) {
+        var instructionsModal = document.getElementById('instructionsModal');
+        instructionsModal.style.display = 'block';
+        sessionStorage.setItem("hasVisited", "true");
+    }
+
+    updateButtonVisibility();
+
+}
+
+function modalCloseHandlers() {
+    var closeInstructionModal = document.querySelector('#instructionsModal .close');
+    closeInstructionModal.onclick = function() {
+        var instructionsModal = document.getElementById('instructionsModal');
+        instructionsModal.style.display = 'none';
+    }
+
+    var closeFeedbackModal = document.querySelector('#feedbackModal .close');
+    if (closeFeedbackModal) {  
+        closeFeedbackModal.onclick = function() {
+            var feedbackModal = document.getElementById('feedbackModal');
+            feedbackModal.style.display = 'none';
+        }
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    }
+}
+
+function updateButtonVisibility() {
+    const username = sessionStorage.getItem("username");
+
+    if (username) {
+        $("#loginFeedback").hide();
+        $("#profileFeedback").show();
+        $("#loginInstructions").hide();
+        $("#profileInstructions").show();
+    } else {
+        $("#loginFeedback").show();
+        $("#profileFeedback").hide();
+        $("#loginInstructions").show();
+        $("#profileInstructions").hide();
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     initializePage();
-    if(sessionStorage.getItem("username")!=null){
-        $("#login").hide();
-        $("#profile").show();
-    }
+
+    showModalOnFirstVisit();
+
+    modalCloseHandlers();
+    
+    updateButtonVisibility();
+
 })
