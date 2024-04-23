@@ -177,4 +177,8 @@ document.getElementById('copyToClipboard').addEventListener('click', function() 
 
 document.addEventListener('DOMContentLoaded', function() {
     initializePage();
+    if(sessionStorage.getItem("username")!=null){
+        $("#login").hide();
+        $("#profile").show();
+    }
 })
