@@ -4,7 +4,6 @@ $(function(){
     if(user){
         var profileUrl = "http://localhost:5000/getProfileInfo/" + user
         var prof = $.ajax({url:profileUrl, method:"GET", success: function(data){
-            $("#username").html(data.username);
             $("#streak").html(data.currentstreak + " days")
             $("#currentStreak").html(data.currentstreak + " days")
             $("#highStreak").html(data.longeststreak + " days")
@@ -80,11 +79,13 @@ $(function(){
     else{
         $("#notsignedin").show();
         $("#signUp").show();
-        $("#profileDetails").attr('disabled', true);
+        $("#logOut").hide();
         $("#userCard").hide();
         $("#group-create-form-container").hide();
         $("#group-join-form-container").hide();
         $("#groupCard").hide();
+        $("#groupLeaderboard").hide();
+        $("#groupLbHeading").hide();
     }
 
     var req  = $.ajax({url:"http://localhost:5000/getGlobalLeaderboard", method:"GET", success: function(data){
@@ -117,7 +118,10 @@ $(function(){
     $("#signUp").click(function(){
         window.location.href = "login.html";
     });
-
+    $("#logOut").click(function(){
+        sessionStorage.clear();
+        window.location.href = "profile.html";
+    });
     
     
 });
