@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             if(data.success) {
                 sessionStorage.setItem("username", username)
-                alert("Login successful!");
+                //alert("Login successful!");
+                window.location.href = "profile.html";
             } else {
                 alert("Login failed!");
             }
