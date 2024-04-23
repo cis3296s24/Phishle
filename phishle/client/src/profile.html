@@ -50,6 +50,7 @@
                 <h3 style="text-align: left;">Current Streak: <span id='currentStreak'></span><span style="float: right;">High Streak: <span id="highStreak"></span></span></h3>
             </div>
         </div>
+
         <div class="table-responsive">
             <table id="globalLeaderboard" class="table caption-top">
                 <h2>Global Leaderboard</h2>
@@ -66,7 +67,31 @@
                 </tbody>
             </table>
         </div>
-
+        <div class="form-container" id="group-create-form-container">
+            <form id="groupCreate" action="#">
+                <div class="input-control">
+                    <label for="groupName">Group Name</label>
+                    <input type="text" id="groupName" name="groupName" placeholder="Enter" required>
+                </div>
+                <button type="submit" id="createGroupbtn">Create Group</button>
+            </form>
+         </div>
+         <div class="form-container" id="group-join-form-container">
+            <form id="groupJoin" action="#">
+                <div class="input-control">
+                    <label for="groupCode">Group Code</label>
+                    <input type="text" id="groupCode" name="groupCode" placeholder="Enter" required>
+                </div>
+                <button type="submit" id="joinGroupbtn">Join Group</button>
+            </form>
+        </div>
+        <div id='groupCard' class="card groupCard">
+            <div class="card-body">
+                <h1 id="cardGroupName"></h1>
+                <h3 style="text-align: left;">Group Code: <span id='groupCodeCard'></span><span style="float: right;">Group Leader: <span id="groupLeaderCard"></span></span></h3>
+                <button type="button" id="leaveGroupbtn">Leave Group</button>
+            </div>
+        </div>
         <div class="table-responsive">
             <table id="groupLeaderboard" class="table caption-top">
                 <h2>Group Leaderboard</h2>
