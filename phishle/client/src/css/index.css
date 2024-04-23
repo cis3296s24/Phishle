@@ -48,10 +48,11 @@ h1 {
     padding: 10px 20px;
     margin: 0 10px;
     border-radius: 20px;
-    border-color: black;
+    border: solid 1px black;
     background: white;
     color: rgb(0, 0, 0);
     cursor: pointer;
+    text-align: center;
     transition: background 0.3s;
 }
 
