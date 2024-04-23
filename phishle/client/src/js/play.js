@@ -37,9 +37,18 @@ function fetchEmails(setId) {
     });
 }
 
+let isAnyEmailClicked = false;
 function createEmailHtml(email) {
     const emailContainer = document.createElement('div');
     emailContainer.className = 'email-container';
+
+    emailContainer.onclick = function() {
+        if (!isAnyEmailClicked) {
+            verifyPhishing(email.set_id, email.email_id);
+            isAnyEmailClicked = true; 
+            disableAllEmailContainers(); 
+        }
+    };
 
     const emailHeader = document.createElement('div');
     emailHeader.className = 'email-header';
@@ -73,13 +82,22 @@ function createEmailHtml(email) {
         `<p><strong>Link:</strong> <a href="${email.link}" target="_blank">Click here</a></p>` :
         '<p><strong>Link:</strong> None</p>';
     emailContainer.appendChild(emailLink);
-
-    const verifyButton = document.createElement('button');
-    verifyButton.innerText = 'Verify Phishing';
-    verifyButton.onclick = function() { verifyPhishing(email.set_id, email.email_id); };
-    emailContainer.appendChild(verifyButton);
+     
+    if (email.link && email.link !== 'none') {
+        emailLink.querySelector('a').addEventListener('click', function(event) {
+            event.stopPropagation(); 
+        });
+    }
 
     return emailContainer;
+}
+
+function disableAllEmailContainers() {
+    const containers = document.querySelectorAll('.email-container');
+    containers.forEach(container => {
+        container.style.opacity = '0.6'; 
+        container.style.pointerEvents = 'none'; 
+    });
 }
 
 function verifyPhishing(setId, emailId) {
@@ -89,14 +107,11 @@ function verifyPhishing(setId, emailId) {
             const feedbackElement = document.getElementById('feedback');
             if (!feedbackElement) {
                 console.error('Feedback element not found in the document.');
-                return; // Exit the function if no element is found
+                return; 
             }
-            const buttons = document.querySelectorAll('button');
 
-            buttons.forEach(button => {
-                button.disabled = true;
-            });
-            
+            phishingResult = result.is_phishing ? 'HOOKED' : 'SAFE';
+  
             getFeedback(setId, emailId)
                 .then(feedback => {
                     feedbackElement.innerText = feedback;
@@ -138,14 +153,27 @@ function showModal(isPhishing) {
     }
 }
 
-
+let latestSetId = null;
 async function initializePage() {
-    const latestSetId = await fetchLatestSetId();
+    latestSetId = await fetchLatestSetId();
 
     if (latestSetId !== null) {
         fetchEmails(latestSetId);
     }
 }
+
+document.getElementById('copyToClipboard').addEventListener('click', function() {
+    if (latestSetId !== null && phishingResult !== null) {
+        const shareText = `Phishle #${latestSetId}. result: ${phishingResult}`;
+        navigator.clipboard.writeText(shareText).then(function() {
+            console.log('Copying to clipboard was successful!');
+        }, function(err) {
+            console.error('Could not copy text to clipboard: ', err);
+        });
+    } else {
+        console.error('Set ID or result not available.');
+    }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     initializePage();
