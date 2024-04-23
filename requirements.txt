@@ -1,0 +1,8 @@
+openai
+Flask
+Flask-SQLAlchemy
+Flask-CORS
+PyMySQL
+APScheduler
+
+
