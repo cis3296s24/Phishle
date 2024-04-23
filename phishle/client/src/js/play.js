@@ -114,7 +114,7 @@ function verifyPhishing(setId, emailId) {
                 return; 
             }
             
-            phishingResult = result.is_phishing ? 'HOOKED' : 'SAFE';
+            phishingResult = result.is_phishing ? 'Safetly identified phishing email' : 'Got HOOKED by an attacker';
 
             const username = sessionStorage.getItem("username");
 
@@ -182,8 +182,9 @@ async function initializePage() {
 
 document.getElementById('copyToClipboard').addEventListener('click', function() {
     if (latestSetId !== null && phishingResult !== null) {
-        const shareText = `Phishle #${latestSetId}. result: ${phishingResult}`;
+        const shareText = `Phishle #${latestSetId}. Result: ${phishingResult}`;
         navigator.clipboard.writeText(shareText).then(function() {
+            alert("Copied to Clipboard: " + shareText);
             console.log('Copying to clipboard was successful!');
         }, function(err) {
             console.error('Could not copy text to clipboard: ', err);
